@@ -19,23 +19,23 @@ with open('latest.csv', mode='r') as infile:
     # next(reader, None)
 
     last_row = None
-    for rows in reader:
+    for dataRow in reader:
 
-        # Reduce the accuracy of the GPS to three decimal places
-        rows[2] = str(round(float(rows[2]), 3))
-        rows[3] = str(round(float(rows[3]), 3))
+        # Reduce the accuracy of the GPS to three decimal places as a simple way of averaging the data
+        dataRow[2] = str(round(float(dataRow[2]), 3))
+        dataRow[3] = str(round(float(dataRow[3]), 3))
 
         # For carbonmonoxide uncomment this if statement
-        if (last_row != None) and (float(rows[8]) == 0) and (float(last_row[8]) == 1):
-            # Only keep the row if the last one had the heaterOn and this one has the heaterOff
+        if (last_row != None) and (float(dataRow[8]) == 1) and (float(last_row[8]) == 0):
+            # Only keep the last row of data if this row has the heaterOn, and the last row was off
             rows_to_write.append(last_row)
 
-        last_row = rows
+        last_row = dataRow
 
         # For particles uncomment this if statement
-        # if (float(rows[8]) == 1):
+        # if (float(dataRow[8]) == 1):
         #     # Only keep the row if the last one had the heaterOn and this one has the heaterOff
-        #     rows_to_write.append(rows)
+        #     rows_to_write.append(dataRow)
 
     for row in rows_to_write:
         # Add to the dictionary of lat,lon keys to average the data values for the same location
